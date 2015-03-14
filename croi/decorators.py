@@ -1,6 +1,7 @@
 from functools import wraps
 
-def memoized(func):
+
+def lazy(func):
     cache = {}
 
     @wraps(func)
@@ -13,8 +14,8 @@ def memoized(func):
 
     return wrap
 
-def memoized_property(func):
-    cache = {}
+
+def lazy_property(func):
     canary = object()
 
     prop_name = '_prop_' + func.func_name
