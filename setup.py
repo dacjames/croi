@@ -4,6 +4,13 @@ from distutils.extension import Extension
 
 setup_args = {
     'name': 'croi',
+    'author': 'Daniel Collins',
+    'author_email': 'dacjames@gmail.com',
+    'description': 'A library of useful crosscutting python functions, classes, and generators.',
+    'long_description': 'README.md',
+    'license': 'MIT',
+    'keywords': 'library lib util utility',
+    'url': 'https://github.com/dacjames/croi',
     'version': '0.1.0',
     'packages': ['croi'],
 }
