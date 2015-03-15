@@ -35,6 +35,4 @@ else:
         for filename in submodules_names
     ]
 
-# del setup_args['ext_modules']
-
 setup(**setup_args)
