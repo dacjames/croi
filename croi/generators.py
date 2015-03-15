@@ -1,5 +1,6 @@
 import random
 import re
+import collections
 
 # ----------------------------------------------------------------------------
 # Base Generators
@@ -240,32 +241,130 @@ def reject_match(regex, iterable):
 
 def partition(needle_or_predicate, iterable):
     if callable(needle_or_predicate):
-        for x in partition_where(needle_or_predicate, iterable):
-            yield x
+        return partition_where(needle_or_predicate, iterable)
 
     else:
         try:
-
-            for x in reject_match(needle_or_predicate, iterable):
-                yield x
-
+            return partition_match(needle_or_predicate, iterable)
         except TypeError as err:
             if 'first argument' not in str(err):
                 raise err
             else:
                 pass
 
-        for x in reject_eq(needle_or_predicate, iterable):
-            yield x
+        return partition_eq(needle_or_predicate, iterable)
 
 
 def partition_eq(needle, iterable):
-    raise NotImplementedError()
+    left = collections.deque()
+    right = collections.deque()
+    iterator = iter(iterable)
+
+    def selector():
+        while True:
+            if len(left) > 0:
+                yield left.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if item == needle:
+                        yield item
+                    else:
+                        right.append(item)
+
+                except StopIteration:
+                    return
+
+    def rejector():
+        while True:
+            if len(right) > 0:
+                yield right.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if item != needle:
+                        yield item
+                    else:
+                        left.append(item)
+
+                except StopIteration:
+                    return
+
+    return selector(), rejector()
 
 
 def partition_where(predicate, iterable):
-    raise NotImplementedError()
+    left = collections.deque()
+    right = collections.deque()
+    iterator = iter(iterable)
+
+    def selector():
+        while True:
+            if len(left) > 0:
+                yield left.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if predicate(item):
+                        yield item
+                    else:
+                        right.append(item)
+
+                except StopIteration:
+                    return
+
+    def rejector():
+        while True:
+            if len(right) > 0:
+                yield right.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if not predicate(item):
+                        yield item
+                    else:
+                        left.append(item)
+
+                except StopIteration:
+                    return
+
+    return selector(), rejector()
 
 
 def partition_match(regex, iterable):
-    raise NotImplementedError()
+    compiled = re.compile(regex)
+    left = collections.deque()
+    right = collections.deque()
+    iterator = iter(iterable)
+
+    def selector():
+        while True:
+            if len(left) > 0:
+                yield left.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if compiled.match(item) is not None:
+                        yield item
+                    else:
+                        right.append(item)
+
+                except StopIteration:
+                    return
+
+    def rejector():
+        while True:
+            if len(right) > 0:
+                yield right.popleft()
+            else:
+                try:
+                    item = iterator.next()
+                    if compiled.match(item) is None:
+                        yield item
+                    else:
+                        left.append(item)
+
+                except StopIteration:
+                    return
+
+    return selector(), rejector()

@@ -144,3 +144,29 @@ def test_reject():
 
     result = list(croi.reject(r'a{1,3}$', ['', 'a', 'aa', 'aaa', 'aaaa', 'aaaaa']))
     assert ['', 'aaaa', 'aaaaa'] == result
+
+
+def test_parition():
+    a, b = croi.partition(1, [1, 2, 1, 4])
+    assert [1, 1] == list(a)
+    assert [2, 4] == list(b)
+
+    a, b = croi.partition(1, [1, 2, 1, 4])
+    assert [2, 4] == list(b)
+    assert [1, 1] == list(a)
+
+    a, b = croi.partition(lambda x: x % 2 == 0, range(10))
+    assert [0, 2, 4, 6, 8] == list(a)
+    assert [1, 3, 5, 7, 9] == list(b)
+
+    a, b = croi.partition(lambda x: x % 2 == 0, range(10))
+    assert [1, 3, 5, 7, 9] == list(b)
+    assert [0, 2, 4, 6, 8] == list(a)
+
+    a, b = croi.partition(r'a{1,3}$', ['', 'a', 'aa', 'aaa', 'aaaa', 'aaaaa'])
+    assert ['a', 'aa', 'aaa'] == list(a)
+    assert ['', 'aaaa', 'aaaaa'] == list(b)
+
+    a, b = croi.partition(r'a{1,3}$', ['', 'a', 'aa', 'aaa', 'aaaa', 'aaaaa'])
+    assert ['', 'aaaa', 'aaaaa'] == list(b)
+    assert ['a', 'aa', 'aaa'] == list(a)
