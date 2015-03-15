@@ -1,4 +1,5 @@
 import random
+import re
 
 # ----------------------------------------------------------------------------
 # Base Generators
@@ -136,3 +137,139 @@ def tail(iterable):
             continue
         else:
             yield x
+
+
+# ----------------------------------------------------------------------------
+# Indexing
+# ----------------------------------------------------------------------------
+
+
+def index(needle, iterable):
+    for i, x in enumerate(iterable):
+        if x == needle:
+            return i
+
+    raise IndexError(needle)
+
+
+def indexes(needle, iterable):
+    for i, x in enumerate(iterable):
+        if x == needle:
+            yield i
+
+
+# ----------------------------------------------------------------------------
+# Filtering
+# ----------------------------------------------------------------------------
+
+def select(needle_or_predicate, iterable):
+    if callable(needle_or_predicate):
+        for x in select_where(needle_or_predicate, iterable):
+            yield x
+
+    else:
+        try:
+            for x in select_match(needle_or_predicate, iterable):
+                yield x
+            return
+
+        except TypeError as err:
+            if 'first argument' not in str(err):
+                raise err
+            else:
+                pass
+
+        for x in select_eq(needle_or_predicate, iterable):
+            yield x
+
+
+def select_eq(needle, iterable):
+    for x in iterable:
+        if x == needle:
+            yield x
+
+
+def select_where(predicate, iterable):
+    for x in iterable:
+        if predicate(x):
+            yield x
+
+
+def select_match(regex, iterable):
+    compiled = re.compile(regex)
+    for x in iterable:
+        if compiled.match(x) is not None:
+            yield x
+
+
+def reject(needle_or_predicate, iterable):
+    if callable(needle_or_predicate):
+        for x in reject_where(needle_or_predicate, iterable):
+            yield x
+
+    else:
+        try:
+            for x in reject_match(needle_or_predicate, iterable):
+                yield x
+            return
+
+        except TypeError as err:
+            if 'first argument' not in str(err):
+                raise err
+            else:
+                pass
+
+        for x in reject_eq(needle_or_predicate, iterable):
+            yield x
+
+
+def reject_eq(needle, iterable):
+    for x in iterable:
+        if x != needle:
+            yield x
+
+
+def reject_where(predicate, iterable):
+    for x in iterable:
+        if not predicate(x):
+            yield x
+
+
+def reject_match(regex, iterable):
+    compiled = re.compile(regex)
+    for x in iterable:
+        if compiled.match(x) is None:
+            yield x
+
+
+def partition(needle_or_predicate, iterable):
+    if callable(needle_or_predicate):
+        for x in partition_where(needle_or_predicate, iterable):
+            yield x
+
+    else:
+        try:
+
+            for x in reject_match(needle_or_predicate, iterable):
+                yield x
+
+        except TypeError as err:
+            if 'first argument' not in str(err):
+                raise err
+            else:
+                pass
+
+        for x in reject_eq(needle_or_predicate, iterable):
+            yield x
+
+
+def partition_eq(needle, iterable):
+    raise NotImplementedError()
+
+
+def partition_where(predicate, iterable):
+    raise NotImplementedError()
+
+
+def partition_match(regex, iterable):
+    raise NotImplementedError()

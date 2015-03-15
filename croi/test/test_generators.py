@@ -122,3 +122,25 @@ def test_head():
 
 def test_tail():
     assert [1, 2, 3, 4, 5, 6, 7, 8, 9] == list(croi.tail(range(10)))
+
+
+def test_select():
+    result = list(croi.select(1, [1, 2, 1, 4]))
+    assert [1, 1] == result
+
+    result = list(croi.select(lambda x: x % 2 == 0, range(10)))
+    assert [0, 2, 4, 6, 8] == result
+
+    result = list(croi.select(r'a{1,3}$', ['', 'a', 'aa', 'aaa', 'aaaa', 'aaaaa']))
+    assert ['a', 'aa', 'aaa'] == result
+
+
+def test_reject():
+    result = list(croi.reject(1, [1, 2, 1, 4]))
+    assert [2, 4] == result
+
+    result = list(croi.reject(lambda x: x % 2 == 0, range(10)))
+    assert [1, 3, 5, 7, 9] == result
+
+    result = list(croi.reject(r'a{1,3}$', ['', 'a', 'aa', 'aaa', 'aaaa', 'aaaaa']))
+    assert ['', 'aaaa', 'aaaaa'] == result
