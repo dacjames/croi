@@ -24,10 +24,17 @@ submodules_names = [
 ]
 
 if use_cython:
-    setup_args['ext_modules'] = cythonize([
-        os.path.join("croi", filename + ".py")
-        for filename in submodules_names
-    ])
+    ext_files = []
+    for filename in submodules_names:
+        pyx_file = os.path.join("croi", filename + ".pyx")
+        py_file = os.path.join("croi", filename + ".py")
+
+        if os.path.exists(pyx_file):
+            ext_files.append(pyx_file)
+        else:
+            ext_files.append(py_file)
+
+    setup_args['ext_modules'] = cythonize(ext_files)
 
 else:
     setup_args['ext_modules'] = [
@@ -35,4 +42,10 @@ else:
         for filename in submodules_names
     ]
 
-setup(**setup_args)
+try:
+    setup(**setup_args)
+
+except:
+    print 'Setup failed trying to build optimized version.  Using pure python.'
+    del setup_args['ext_modules']
+    setup(**setup_args)

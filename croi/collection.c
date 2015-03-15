@@ -432,15 +432,10 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "croi/collection.py",
+  "croi/collection.pyx",
 };
 
 /*--- Type declarations ---*/
-struct __pyx_defaults;
-typedef struct __pyx_defaults __pyx_defaults;
-struct __pyx_defaults {
-  PyObject *__pyx_arg_join;
-};
 
 /* --- Runtime support code (head) --- */
 #ifndef CYTHON_REFNANNY
@@ -531,6 +526,9 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[], \
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args, \
     const char* function_name);
 
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact);
+
 static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name);
 
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -572,6 +570,26 @@ static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* dict, int is_dict, 
                                                    Py_ssize_t* p_orig_length, int* p_is_dict);
 static CYTHON_INLINE int __Pyx_dict_iter_next(PyObject* dict_or_iter, Py_ssize_t orig_length, Py_ssize_t* ppos,
                                               PyObject** pkey, PyObject** pvalue, PyObject** pitem, int is_dict);
+
+#if PY_MAJOR_VERSION >= 3
+static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key) {
+    PyObject *value;
+    value = PyDict_GetItemWithError(d, key);
+    if (unlikely(!value)) {
+        if (!PyErr_Occurred()) {
+            PyObject* args = PyTuple_Pack(1, key);
+            if (likely(args))
+                PyErr_SetObject(PyExc_KeyError, args);
+            Py_XDECREF(args);
+        }
+        return NULL;
+    }
+    Py_INCREF(value);
+    return value;
+}
+#else
+    #define __Pyx_PyDict_GetItem(d, key) PyObject_GetItem(d, key)
+#endif
 
 static CYTHON_INLINE void __Pyx_ExceptionSave(PyObject **type, PyObject **value, PyObject **tb);
 static void __Pyx_ExceptionReset(PyObject *type, PyObject *value, PyObject *tb);
@@ -670,7 +688,6 @@ int __pyx_module_is_main_croi__collection = 0;
 /* Implementation of 'croi.collection' */
 static PyObject *__pyx_builtin_KeyError;
 static PyObject *__pyx_lambda_funcdef_4croi_10collection_lambda1(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_l, PyObject *__pyx_v_r); /* proto */
-static PyObject *__pyx_pf_4croi_10collection_3__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_left, PyObject *__pyx_v_right, PyObject *__pyx_v_join); /* proto */
 static char __pyx_k_k[] = "k";
 static char __pyx_k_l[] = "l";
@@ -689,7 +706,7 @@ static char __pyx_k_KeyError[] = "KeyError";
 static char __pyx_k_iteritems[] = "iteritems";
 static char __pyx_k_croi_collection[] = "croi.collection";
 static char __pyx_k_updated_locals_lambda[] = "updated.<locals>.<lambda>";
-static char __pyx_k_home_dcollins_Dropbox_Code_Dac[] = "/home/dcollins/Dropbox/Code/Dac/croi/croi/collection.py";
+static char __pyx_k_home_dcollins_Dropbox_Code_Dac[] = "/home/dcollins/Dropbox/Code/Dac/croi/croi/collection.pyx";
 static PyObject *__pyx_n_s_KeyError;
 static PyObject *__pyx_n_s_copy;
 static PyObject *__pyx_n_s_croi_collection;
@@ -708,13 +725,14 @@ static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_updated;
 static PyObject *__pyx_n_s_updated_locals_lambda;
 static PyObject *__pyx_n_s_v;
-static PyObject *__pyx_tuple_;
-static PyObject *__pyx_codeobj__2;
+static PyObject *__pyx_k_;
+static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_codeobj__3;
 
-/* "croi/collection.py":4
+/* "croi/collection.pyx":4
  * 
  * 
- * def updated(left, right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
+ * def updated(dict left, dict right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
  *     result = copy.copy(left)
  * 
  */
@@ -797,45 +815,6 @@ static PyObject *__pyx_lambda_funcdef_4croi_10collection_lambda1(CYTHON_UNUSED P
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_4croi_10collection_3__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__defaults__", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_join);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_join);
-  __Pyx_GIVEREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_join);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_INCREF(Py_None);
-  PyTuple_SET_ITEM(__pyx_t_2, 1, Py_None);
-  __Pyx_GIVEREF(Py_None);
-  __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("croi.collection.__defaults__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
 /* Python wrapper */
 static PyObject *__pyx_pw_4croi_10collection_1updated(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyMethodDef __pyx_mdef_4croi_10collection_1updated = {"updated", (PyCFunction)__pyx_pw_4croi_10collection_1updated, METH_VARARGS|METH_KEYWORDS, 0};
@@ -852,8 +831,7 @@ static PyObject *__pyx_pw_4croi_10collection_1updated(PyObject *__pyx_self, PyOb
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_left,&__pyx_n_s_right,&__pyx_n_s_join,0};
     PyObject* values[3] = {0,0,0};
-    __pyx_defaults *__pyx_dynamic_args = __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self);
-    values[2] = __pyx_dynamic_args->__pyx_arg_join;
+    values[2] = __pyx_k_;
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -892,8 +870,8 @@ static PyObject *__pyx_pw_4croi_10collection_1updated(PyObject *__pyx_self, PyOb
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_left = values[0];
-    __pyx_v_right = values[1];
+    __pyx_v_left = ((PyObject*)values[0]);
+    __pyx_v_right = ((PyObject*)values[1]);
     __pyx_v_join = values[2];
   }
   goto __pyx_L4_argument_unpacking_done;
@@ -904,9 +882,15 @@ static PyObject *__pyx_pw_4croi_10collection_1updated(PyObject *__pyx_self, PyOb
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_left), (&PyDict_Type), 1, "left", 1))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_right), (&PyDict_Type), 1, "right", 1))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_r = __pyx_pf_4croi_10collection_updated(__pyx_self, __pyx_v_left, __pyx_v_right, __pyx_v_join);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
@@ -936,9 +920,9 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("updated", 0);
 
-  /* "croi/collection.py":5
+  /* "croi/collection.pyx":5
  * 
- * def updated(left, right, join=lambda l, r: r):
+ * def updated(dict left, dict right, join=lambda l, r: r):
  *     result = copy.copy(left)             # <<<<<<<<<<<<<<
  * 
  *     for k, v in right.iteritems():
@@ -976,7 +960,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
   __pyx_v_result = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "croi/collection.py":7
+  /* "croi/collection.pyx":7
  *     result = copy.copy(left)
  * 
  *     for k, v in right.iteritems():             # <<<<<<<<<<<<<<
@@ -988,7 +972,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "iteritems");
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_3 = __Pyx_dict_iterator(__pyx_v_right, 0, __pyx_n_s_iteritems, (&__pyx_t_6), (&__pyx_t_7)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_dict_iterator(__pyx_v_right, 1, __pyx_n_s_iteritems, (&__pyx_t_6), (&__pyx_t_7)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_1);
   __pyx_t_1 = __pyx_t_3;
@@ -1004,7 +988,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
     __Pyx_XDECREF_SET(__pyx_v_v, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "croi/collection.py":8
+    /* "croi/collection.pyx":8
  * 
  *     for k, v in right.iteritems():
  *         try:             # <<<<<<<<<<<<<<
@@ -1018,14 +1002,18 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
       __Pyx_XGOTREF(__pyx_t_11);
       /*try:*/ {
 
-        /* "croi/collection.py":9
+        /* "croi/collection.pyx":9
  *     for k, v in right.iteritems():
  *         try:
  *             result[k] = join(left[k], v)             # <<<<<<<<<<<<<<
  *         except KeyError:
  *             result[k] = v
  */
-        __pyx_t_3 = PyObject_GetItem(__pyx_v_left, __pyx_v_k); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L5_error;};
+        if (unlikely(__pyx_v_left == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L5_error;}
+        }
+        __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_left, __pyx_v_k); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L5_error;};
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_v_join);
         __pyx_t_2 = __pyx_v_join; __pyx_t_12 = NULL;
@@ -1069,7 +1057,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "croi/collection.py":10
+      /* "croi/collection.pyx":10
  *         try:
  *             result[k] = join(left[k], v)
  *         except KeyError:             # <<<<<<<<<<<<<<
@@ -1084,7 +1072,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_GOTREF(__pyx_t_14);
 
-        /* "croi/collection.py":11
+        /* "croi/collection.pyx":11
  *             result[k] = join(left[k], v)
  *         except KeyError:
  *             result[k] = v             # <<<<<<<<<<<<<<
@@ -1114,7 +1102,7 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "croi/collection.py":13
+  /* "croi/collection.pyx":13
  *             result[k] = v
  * 
  *     return result             # <<<<<<<<<<<<<<
@@ -1124,10 +1112,10 @@ static PyObject *__pyx_pf_4croi_10collection_updated(CYTHON_UNUSED PyObject *__p
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "croi/collection.py":4
+  /* "croi/collection.pyx":4
  * 
  * 
- * def updated(left, right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
+ * def updated(dict left, dict right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
  *     result = copy.copy(left)
  * 
  */
@@ -1205,17 +1193,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "croi/collection.py":4
+  /* "croi/collection.pyx":4
  * 
  * 
- * def updated(left, right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
+ * def updated(dict left, dict right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
  *     result = copy.copy(left)
  * 
  */
-  __pyx_tuple_ = PyTuple_Pack(6, __pyx_n_s_left, __pyx_n_s_right, __pyx_n_s_join, __pyx_n_s_result, __pyx_n_s_k, __pyx_n_s_v); if (unlikely(!__pyx_tuple_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_dcollins_Dropbox_Code_Dac, __pyx_n_s_updated, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__2 = PyTuple_Pack(6, __pyx_n_s_left, __pyx_n_s_right, __pyx_n_s_join, __pyx_n_s_result, __pyx_n_s_k, __pyx_n_s_v); if (unlikely(!__pyx_tuple__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
+  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_dcollins_Dropbox_Code_Dac, __pyx_n_s_updated, 4, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -1239,7 +1227,6 @@ PyMODINIT_FUNC PyInit_collection(void)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1316,7 +1303,7 @@ PyMODINIT_FUNC PyInit_collection(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "croi/collection.py":1
+  /* "croi/collection.pyx":1
  * import copy             # <<<<<<<<<<<<<<
  * 
  * 
@@ -1326,26 +1313,24 @@ PyMODINIT_FUNC PyInit_collection(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_copy, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "croi/collection.py":4
+  /* "croi/collection.pyx":4
  * 
  * 
- * def updated(left, right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
+ * def updated(dict left, dict right, join=lambda l, r: r):             # <<<<<<<<<<<<<<
  *     result = copy.copy(left)
  * 
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4croi_10collection_1updated, 0, __pyx_n_s_updated, NULL, __pyx_n_s_croi_collection, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4croi_10collection_2lambda1, 0, __pyx_n_s_updated_locals_lambda, NULL, __pyx_n_s_croi_collection, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (!__Pyx_CyFunction_InitDefaults(__pyx_t_1, sizeof(__pyx_defaults), 1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_4croi_10collection_2lambda1, 0, __pyx_n_s_updated_locals_lambda, NULL, __pyx_n_s_croi_collection, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_t_1)->__pyx_arg_join = __pyx_t_2;
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_1, __pyx_pf_4croi_10collection_3__defaults__);
+  __pyx_k_ = __pyx_t_1;
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4croi_10collection_1updated, NULL, __pyx_n_s_croi_collection); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_updated, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "croi/collection.py":1
+  /* "croi/collection.pyx":1
  * import copy             # <<<<<<<<<<<<<<
  * 
  * 
@@ -1360,7 +1345,6 @@ PyMODINIT_FUNC PyInit_collection(void)
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init croi.collection", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -1545,6 +1529,32 @@ invalid_keyword:
     #endif
 bad:
     return -1;
+}
+
+static void __Pyx_RaiseArgumentTypeInvalid(const char* name, PyObject *obj, PyTypeObject *type) {
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
+        name, type->tp_name, Py_TYPE(obj)->tp_name);
+}
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact)
+{
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (none_allowed && obj == Py_None) return 1;
+    else if (exact) {
+        if (likely(Py_TYPE(obj) == type)) return 1;
+        #if PY_MAJOR_VERSION == 2
+        else if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
+        #endif
+    }
+    else {
+        if (likely(PyObject_TypeCheck(obj, type))) return 1;
+    }
+    __Pyx_RaiseArgumentTypeInvalid(name, obj, type);
+    return 0;
 }
 
 static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name) {
