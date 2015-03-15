@@ -107,10 +107,6 @@ def drop_while(predicate, iterable):
             yield x
 
 
-def split(n_or_predicate, iterable):
-    raise NotImplementedError()
-
-
 # ----------------------------------------------------------------------------
 # Value Selectors
 # ----------------------------------------------------------------------------
@@ -162,14 +158,14 @@ def indexes(needle, iterable):
 # Filtering
 # ----------------------------------------------------------------------------
 
-def select(needle_or_predicate, iterable):
-    if callable(needle_or_predicate):
-        for x in select_where(needle_or_predicate, iterable):
+def select(regex_or_needle_or_predicate, iterable):
+    if callable(regex_or_needle_or_predicate):
+        for x in select_where(regex_or_needle_or_predicate, iterable):
             yield x
 
     else:
         try:
-            for x in select_match(needle_or_predicate, iterable):
+            for x in select_match(regex_or_needle_or_predicate, iterable):
                 yield x
             return
 
@@ -179,7 +175,7 @@ def select(needle_or_predicate, iterable):
             else:
                 pass
 
-        for x in select_eq(needle_or_predicate, iterable):
+        for x in select_eq(regex_or_needle_or_predicate, iterable):
             yield x
 
 
@@ -202,14 +198,14 @@ def select_match(regex, iterable):
             yield x
 
 
-def reject(needle_or_predicate, iterable):
-    if callable(needle_or_predicate):
-        for x in reject_where(needle_or_predicate, iterable):
+def reject(regex_or_needle_or_predicate, iterable):
+    if callable(regex_or_needle_or_predicate):
+        for x in reject_where(regex_or_needle_or_predicate, iterable):
             yield x
 
     else:
         try:
-            for x in reject_match(needle_or_predicate, iterable):
+            for x in reject_match(regex_or_needle_or_predicate, iterable):
                 yield x
             return
 
@@ -219,7 +215,7 @@ def reject(needle_or_predicate, iterable):
             else:
                 pass
 
-        for x in reject_eq(needle_or_predicate, iterable):
+        for x in reject_eq(regex_or_needle_or_predicate, iterable):
             yield x
 
 
